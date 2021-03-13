@@ -3,20 +3,15 @@ import {NgModule} from '@angular/core';
 
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
-import {AuthConfig, OAuthModule} from 'angular-oauth2-oidc-codeflow';
+import {OAuthModule} from 'angular-oauth2-oidc-codeflow';
 import {HttpClientModule} from '@angular/common/http';
 import {RouterModule, Routes} from '@angular/router';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {MatToolbarModule} from '@angular/material/toolbar';
+import {MatIconModule} from '@angular/material/icon';
+import {MatMenuModule} from '@angular/material/menu';
+import {MatButton, MatButtonModule} from '@angular/material/button';
 
-export const authConfig: AuthConfig = {
-  issuer: 'http://localhost:8080/auth/realms/poker_backend',
-  redirectUri: window.location.origin,
-  clientId: 'poker_ui',
-  scope: 'openid profile email',
-  responseType: 'code',
-  showDebugInformation: true,
-  disableNonceCheck: true
-};
 
 const routes: Routes = [
   { path: 'home', loadChildren: () => import('./main/main.module').then(m => m.MainModule)},

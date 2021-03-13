@@ -2,8 +2,20 @@
 // `ng build --prod` replaces `environment.ts` with `environment.prod.ts`.
 // The list of file replacements can be found in `angular.json`.
 
+import {AuthConfig} from 'angular-oauth2-oidc-codeflow';
+
 export const environment = {
   production: false
+};
+
+export const authConfig: AuthConfig = {
+  issuer: 'http://localhost:8080/auth/realms/poker_backend',
+  redirectUri: window.location.origin,
+  clientId: 'poker_ui',
+  scope: 'openid profile email',
+  responseType: 'code',
+  showDebugInformation: true,
+  disableNonceCheck: true
 };
 
 /*

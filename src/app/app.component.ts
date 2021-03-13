@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import {JwksValidationHandler, OAuthService} from 'angular-oauth2-oidc-codeflow';
-import {authConfig} from './app.module';
+import {authConfig} from '../environments/environment';
 
 @Component({
   selector: 'app-root',
