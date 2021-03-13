@@ -5,6 +5,7 @@ import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
 import {AuthConfig, OAuthModule} from 'angular-oauth2-oidc-codeflow';
 import {HttpClientModule} from '@angular/common/http';
+import { MainContentComponent } from './main-content/main-content/main-content.component';
 
 export const authConfig: AuthConfig = {
   issuer: 'http://localhost:8080/auth/realms/poker_backend',
@@ -18,7 +19,8 @@ export const authConfig: AuthConfig = {
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    MainContentComponent
   ],
   imports: [
     BrowserModule,
