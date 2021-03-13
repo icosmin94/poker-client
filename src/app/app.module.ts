@@ -6,6 +6,7 @@ import {AppComponent} from './app.component';
 import {AuthConfig, OAuthModule} from 'angular-oauth2-oidc-codeflow';
 import {HttpClientModule} from '@angular/common/http';
 import {RouterModule, Routes} from '@angular/router';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 export const authConfig: AuthConfig = {
   issuer: 'http://localhost:8080/auth/realms/poker_backend',
@@ -34,6 +35,7 @@ const routes: Routes = [
     HttpClientModule,
     OAuthModule.forRoot(),
     RouterModule.forRoot(routes),
+    BrowserAnimationsModule,
   ],
   providers: [],
   bootstrap: [AppComponent]
