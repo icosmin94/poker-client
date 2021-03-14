@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
+import {OAuthService} from 'angular-oauth2-oidc-codeflow';
 
 @Component({
   selector: 'app-login-page',
@@ -7,7 +8,13 @@ import { Component, OnInit } from '@angular/core';
 })
 export class LoginPageComponent implements OnInit {
 
-  constructor() { }
+  constructor(private oauthService: OAuthService) {
+
+  }
+
+  public login(): void {
+    this.oauthService.initAuthorizationCodeFlow();
+  }
 
   ngOnInit(): void {
   }

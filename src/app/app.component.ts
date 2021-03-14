@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import {Component} from '@angular/core';
 import {JwksValidationHandler, OAuthService} from 'angular-oauth2-oidc-codeflow';
 import {authConfig} from '../environments/environment';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-root',
@@ -10,7 +11,9 @@ import {authConfig} from '../environments/environment';
 export class AppComponent {
   title = 'poker-ui';
 
-  constructor(private oauthService: OAuthService) {
+  constructor(private oauthService: OAuthService,
+              private router: Router) {
+
     this.oauthService.configure(authConfig);
     this.oauthService.tokenValidationHandler = new JwksValidationHandler();
     this.oauthService.loadDiscoveryDocumentAndTryLogin().then(_ => {
@@ -18,21 +21,11 @@ export class AppComponent {
     }).catch(err => {
       console.log('Unable to login');
     });
+    this.oauthService.events.subscribe(result => {
+      if (result.type === 'token_refreshed') {
+        router.navigate(['/']);
+      }
+    });
   }
 
-  public login(): void {
-    this.oauthService.initAuthorizationCodeFlow();
-  }
-
-  public logout(): void {
-    this.oauthService.logOut();
-  }
-
-  get givenName(): any {
-    const claims: any = this.oauthService.getIdentityClaims();
-    if (!claims) {
-      return null;
-    }
-    return claims.name;
-  }
 }

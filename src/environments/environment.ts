@@ -10,7 +10,7 @@ export const environment = {
 
 export const authConfig: AuthConfig = {
   issuer: 'http://localhost:8080/auth/realms/poker_backend',
-  redirectUri: window.location.origin,
+  redirectUri: 'http://localhost:4200',
   clientId: 'poker_ui',
   scope: 'openid profile email',
   responseType: 'code',

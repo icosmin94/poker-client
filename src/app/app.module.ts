@@ -8,14 +8,18 @@ import {HttpClientModule} from '@angular/common/http';
 import {RouterModule, Routes} from '@angular/router';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {OauthGuard} from './services/oauth.guard';
+import {LoginGuard} from './services/login.guard';
 
 
 const routes: Routes = [
   { path: 'home',
     loadChildren: () => import('./main/main.module').then(m => m.MainModule),
-    canActivate: [OauthGuard]
+    canActivate: [OauthGuard],
   },
-  { path: 'login', loadChildren: () => import('./login/login.module').then(m => m.LoginModule)},
+  { path: 'login',
+    loadChildren: () => import('./login/login.module').then(m => m.LoginModule),
+    canActivate: [LoginGuard]
+  },
   { path: '**', redirectTo: 'home'}
 ];
 
