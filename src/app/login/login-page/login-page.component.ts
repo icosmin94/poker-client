@@ -7,7 +7,6 @@ import {OAuthService} from 'angular-oauth2-oidc-codeflow';
   styleUrls: ['./login-page.component.css']
 })
 export class LoginPageComponent implements OnInit {
-
   constructor(private oauthService: OAuthService) {
 
   }
