@@ -1,14 +1,17 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 import {OAuthService} from 'angular-oauth2-oidc-codeflow';
 
 @Component({
-  selector: 'app-main-content',
-  templateUrl: './main-content.component.html',
-  styleUrls: ['./main-content.component.css']
+  selector: 'app-toolbar',
+  templateUrl: './toolbar.component.html',
+  styleUrls: ['./toolbar.component.css']
 })
-export class MainContentComponent implements OnInit {
+export class ToolbarComponent implements OnInit {
 
   constructor(private oauthService: OAuthService) { }
+
+  @Output()
+  toggleSidenav = new EventEmitter<void>();
 
   public logout(): void {
     this.oauthService.logOut();
