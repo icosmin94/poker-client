@@ -1,7 +1,7 @@
 <mat-sidenav-container class="app-container">
-  <mat-sidenav #sidenav class="app-sidenav mat-elevation-z10">
+  <mat-sidenav #sidenav class="app-sidenav " [opened]=false [mode]="isScreenSmall ? 'over' : 'side'">
     <mat-toolbar color="primary">
-      Poker Application
+      Menu
     </mat-toolbar>
     <mat-nav-list>
 
