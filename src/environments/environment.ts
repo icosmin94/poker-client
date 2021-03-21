@@ -5,7 +5,8 @@
 import {AuthConfig} from 'angular-oauth2-oidc-codeflow';
 
 export const environment = {
-  production: false
+  production: false,
+  backendUrl: 'http://localhost:8102/'
 };
 
 export const authConfig: AuthConfig = {

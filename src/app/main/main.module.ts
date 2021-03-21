@@ -8,16 +8,19 @@ import { MainComponent } from './components/main.component';
 import {ToolbarComponent} from './components/toolbar/toolbar.component';
 import {MatSidenavModule} from '@angular/material/sidenav';
 import {MatListModule} from '@angular/material/list';
+import { TablesComponent } from './components/tables/tables.component';
 
 
 const routes: Routes = [
-  {
-    path: '', component: MainComponent},
-  { path: '**', redirectTo: '' }
+  { path: '', component: MainComponent,
+  children: [
+    { path: 'tables', component: TablesComponent },
+  ]},
+  { path: '**', redirectTo: '' },
 ];
 
 @NgModule({
-  declarations: [MainContentComponent, SidenavComponent, MainComponent, ToolbarComponent],
+  declarations: [MainContentComponent, SidenavComponent, MainComponent, ToolbarComponent, TablesComponent],
   imports: [
     CommonModule,
     [RouterModule.forChild(routes)],

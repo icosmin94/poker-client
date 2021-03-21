@@ -1,0 +1,25 @@
+<div class='table-responsive'>
+  <table class='table'
+         *ngIf='pokerTables && pokerTables.length'>
+    <thead>
+    <tr>
+      <th>Id</th>
+      <th>TableName</th>
+      <th>Number Of Players</th>
+      <th>Big Blind</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor='let pokerTable of pokerTables'>
+      <td> {{pokerTable.id}}</td>
+      <td>{{pokerTable.tableName}}</td>
+      <td>{{pokerTable.numberOfPlayers}}</td>
+      <td>{{pokerTable.bigBlind }}</td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+<div *ngIf='errorMessage'
+     class='alert alert-danger'>
+  Error: {{ errorMessage }}
+</div>
