@@ -3,9 +3,19 @@
     <mat-toolbar color="primary">
       Menu
     </mat-toolbar>
-    <mat-nav-list>
+    <mat-list role="list">
+      <mat-list-item role="listitem">
+        <a matLine [routerLink]="['/home'] " style="text-decoration:none; color: unset;">
+          Home
+        </a>
+      </mat-list-item>
+      <mat-list-item role="listitem">
+        <a matLine [routerLink]="['/home/tables'] " style="text-decoration:none; color: unset;">
+          Poker Tables
+        </a>
+      </mat-list-item>
 
-    </mat-nav-list>
+    </mat-list>
   </mat-sidenav>
 
   <div class="app-sidenav-content">

@@ -1,23 +1,35 @@
-<div class='table-responsive'>
-  <table class='table'
-         *ngIf='pokerTables && pokerTables.length'>
-    <thead>
-    <tr>
-      <th>Id</th>
-      <th>TableName</th>
-      <th>Number Of Players</th>
-      <th>Big Blind</th>
+<div class="mat-elevation-z8" *ngIf='pokerTables && pokerTables.length'>
+
+  <table mat-table [dataSource]="dataSource" matSort>
+
+    <ng-container matColumnDef="id">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> No. </th>
+      <td mat-cell *matCellDef="let node"> {{node.id}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="tableName">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Table Name </th>
+      <td mat-cell *matCellDef="let node"> {{node.tableName}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="numberOfPlayers">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Number Of Players </th>
+      <td mat-cell *matCellDef="let node"> {{node.numberOfPlayers }} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="bigBlind">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Big Blind </th>
+      <td mat-cell *matCellDef="let node"> {{node.bigBlind }} </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="['id', 'tableName', 'numberOfPlayers', 'bigBlind']"></tr>
+    <tr mat-row *matRowDef="let row; columns: ['id', 'tableName', 'numberOfPlayers', 'bigBlind']"></tr>
+    <tr class="mat-row" *matNoDataRow>
+      <td class="mat-cell" colspan="4">No data found</td>
     </tr>
-    </thead>
-    <tbody>
-    <tr *ngFor='let pokerTable of pokerTables'>
-      <td> {{pokerTable.id}}</td>
-      <td>{{pokerTable.tableName}}</td>
-      <td>{{pokerTable.numberOfPlayers}}</td>
-      <td>{{pokerTable.bigBlind }}</td>
-    </tr>
-    </tbody>
   </table>
+  <mat-paginator [pageSize]="2" [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+
 </div>
 <div *ngIf='errorMessage'
      class='alert alert-danger'>

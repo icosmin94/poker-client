@@ -9,6 +9,9 @@ import {ToolbarComponent} from './components/toolbar/toolbar.component';
 import {MatSidenavModule} from '@angular/material/sidenav';
 import {MatListModule} from '@angular/material/list';
 import { TablesComponent } from './components/tables/tables.component';
+import {MatTableModule} from '@angular/material/table';
+import {MatSortModule} from '@angular/material/sort';
+import {MatPaginatorModule} from '@angular/material/paginator';
 
 
 const routes: Routes = [
@@ -25,8 +28,7 @@ const routes: Routes = [
     CommonModule,
     [RouterModule.forChild(routes)],
     MaterialModule,
-    MatSidenavModule,
-    MatListModule
+    MatSidenavModule
   ]
 })
 export class MainModule { }
