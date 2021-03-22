@@ -21,6 +21,7 @@ export class AppComponent {
     }).catch(err => {
       console.log('Unable to login');
     });
+    this.oauthService.setupAutomaticSilentRefresh();
     this.oauthService.events.subscribe(result => {
       if (result.type === 'token_refreshed') {
         router.navigate(['/']);
