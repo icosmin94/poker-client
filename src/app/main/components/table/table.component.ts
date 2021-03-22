@@ -26,7 +26,7 @@ export class TableComponent implements OnInit {
     this.cardsNumber = 5;
     this.cards = [];
     for (let i = 0; i < this.cardsNumber; i++) {
-      this.cards.push('gray_back');
+      this.cards.push('green_back');
     }
     this.cursor = 0;
   }
@@ -43,7 +43,7 @@ export class TableComponent implements OnInit {
 
   reset(): void {
     for (let i = 0; i < this.cardsNumber; i++) {
-      this.cards[i] = 'gray_back';
+      this.cards[i] = 'green_back';
     }
     this.cursor = 0;
   }
