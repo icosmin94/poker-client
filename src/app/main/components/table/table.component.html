@@ -1,2 +1,12 @@
 
 <p>table {{id}} works!</p>
+
+<button  mat-raised-button color="primary" (click)="nextCard()">Next Card</button>
+<button  mat-raised-button color="primary" (click)="reset()">Reset</button>
+<div class="container">
+  <div *ngFor="let card of cards">
+    <img   [src]="'../../../../assets/cards/'+ card + '.png'" alt="No buena" width="100" height="150" class="board-card">
+  </div>
+
+
+</div>
