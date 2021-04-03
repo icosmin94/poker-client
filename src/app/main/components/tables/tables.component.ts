@@ -10,7 +10,7 @@ import {MatTableDataSource} from '@angular/material/table';
   templateUrl: './tables.component.html',
   styleUrls: ['./tables.component.css']
 })
-export class TablesComponent implements OnInit, AfterViewInit {
+export class TablesComponent implements OnInit {
 
   pokerTables: PokerTable[] | undefined;
   errorMessage = '';
@@ -30,7 +30,7 @@ export class TablesComponent implements OnInit, AfterViewInit {
     }
   }
 
-  constructor(private pokerTableService: PokerTableService,) {
+  constructor(private pokerTableService: PokerTableService) {
 
   }
 
@@ -42,11 +42,6 @@ export class TablesComponent implements OnInit, AfterViewInit {
       },
       error: err => this.errorMessage = err
     });
-  }
-
-  ngAfterViewInit(): void {
-    this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
   }
 
 }

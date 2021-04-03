@@ -1,12 +1,23 @@
 
-<p>table {{id}} works!</p>
-
-<button  mat-raised-button color="primary" (click)="nextCard()">Next Card</button>
-<button  mat-raised-button color="primary" (click)="reset()">Reset</button>
-<div class="container">
-  <div *ngFor="let card of cards">
-    <img   [src]="'../../../../assets/cards/'+ card + '.png'" alt="No buena" width="100" height="150" class="board-card">
+  <p>table {{id}} works!</p>
+  <div style="display: block">
+    <button  mat-raised-button color="primary" (click)="nextCard()">Next Card</button>
+    <button  mat-raised-button color="primary" (click)="reset()">Reset</button>
   </div>
 
 
-</div>
+  <div class="container">
+    <div class="flop">
+      <div class="poker_cards_container">
+        <div *ngFor="let card of cards">
+          <img   [src]="'../../../../assets/cards/'+ card + '.png'" alt="No buena" width="100" height="150" class="board-card">
+        </div>
+      </div>
+    </div>
+
+    <img src="../../../../assets/poker_table.png" class="poker_table">
+
+  </div>
+
+
+

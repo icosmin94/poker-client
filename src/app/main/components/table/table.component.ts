@@ -1,8 +1,24 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
-import {Encodable, IdentitySerializer, JsonSerializer, RSocketClient} from 'rsocket-core';
+import {
+  BufferEncoders,
+  Encodable,
+  encodeAndAddCustomMetadata,
+  encodeAndAddWellKnownMetadata,
+  IdentitySerializer,
+  JsonSerializer,
+  MESSAGE_RSOCKET_COMPOSITE_METADATA,
+  MESSAGE_RSOCKET_ROUTING,
+  RSocketClient
+} from 'rsocket-core';
+
 import RSocketWebSocketClient from 'rsocket-websocket-client';
 import {ReactiveSocket} from 'rsocket-types';
+import {OAuthService} from 'angular-oauth2-oidc-codeflow';
+
+const metadataMimeType = MESSAGE_RSOCKET_COMPOSITE_METADATA.string;
+const bearerMimeType = 'message/x.rsocket.authentication.bearer.v0';
+
 
 @Component({
   selector: 'app-table',
@@ -10,7 +26,8 @@ import {ReactiveSocket} from 'rsocket-types';
   styleUrls: ['./table.component.css']
 })
 export class TableComponent implements OnInit, OnDestroy {
-  constructor(private route: ActivatedRoute) { }
+  constructor(private route: ActivatedRoute,
+              private oauthService: OAuthService) { }
 
   public id: number;
   public cards: string[] ;
@@ -21,6 +38,8 @@ export class TableComponent implements OnInit, OnDestroy {
 
   private colors = ['C', 'D', 'H', 'S'];
   private cardNumbers = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K'];
+
+
 
   ngOnInit(): void {
 
@@ -43,11 +62,13 @@ export class TableComponent implements OnInit, OnDestroy {
         keepAlive: 60000,
         lifetime: 180000,
         dataMimeType: 'application/json',
-        metadataMimeType: 'message/x.rsocket.routing.v0',
+        metadataMimeType,
       },
       transport: new RSocketWebSocketClient({
-        url: 'ws://localhost:7000/rsocket'
-      }),
+        url: 'ws://localhost:7000/rsocket',
+        debug: true
+      }, BufferEncoders),
+      errorHandler: (error => console.log(error)),
     });
 
     this.client.connect().subscribe({
@@ -55,7 +76,15 @@ export class TableComponent implements OnInit, OnDestroy {
         socket
           .metadataPush( {
             data: 'ana are mere',
-            metadata: String.fromCharCode('table-connection'.length) + 'table-connection'
+            metadata: encodeAndAddWellKnownMetadata(
+              encodeAndAddCustomMetadata(
+                Buffer.alloc(0),
+                bearerMimeType,
+                Buffer.from(this.oauthService.getAccessToken())
+              ),
+              MESSAGE_RSOCKET_ROUTING,
+              Buffer.from(String.fromCharCode('table-connection'.length) + 'table-connection')
+            )
           })
           .subscribe({
             onComplete: () => console.log('complete'),
