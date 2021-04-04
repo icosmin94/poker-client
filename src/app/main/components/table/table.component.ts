@@ -29,7 +29,7 @@ export class TableComponent implements OnInit, OnDestroy {
   constructor(private route: ActivatedRoute,
               private oauthService: OAuthService) { }
 
-  public id: number;
+  public tableId: number;
   public cards: string[] ;
   public cardsNumber: number;
   public cursor: number;
@@ -44,7 +44,7 @@ export class TableComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
 
     this.route.params.subscribe(params => {
-      this.id = +params.id;
+      this.tableId = +params.id;
     });
     this.cardsNumber = 5;
     this.cards = [];
@@ -70,12 +70,12 @@ export class TableComponent implements OnInit, OnDestroy {
       }, BufferEncoders),
       errorHandler: (error => console.log(error)),
     });
-
+    const socketChannel = 'table-connection.' + this.tableId;
     this.client.connect().subscribe({
       onComplete: (socket: ReactiveSocket<any, any>) => {
         socket
           .metadataPush( {
-            data: 'ana are mere',
+            data: null,
             metadata: encodeAndAddWellKnownMetadata(
               encodeAndAddCustomMetadata(
                 Buffer.alloc(0),
@@ -83,7 +83,7 @@ export class TableComponent implements OnInit, OnDestroy {
                 Buffer.from(this.oauthService.getAccessToken())
               ),
               MESSAGE_RSOCKET_ROUTING,
-              Buffer.from(String.fromCharCode('table-connection'.length) + 'table-connection')
+              Buffer.from(String.fromCharCode(socketChannel.length) + socketChannel)
             )
           })
           .subscribe({
