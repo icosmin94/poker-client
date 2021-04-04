@@ -5,6 +5,7 @@ import {
   Encodable,
   encodeAndAddCustomMetadata,
   encodeAndAddWellKnownMetadata,
+  encodeRoute,
   IdentitySerializer,
   JsonSerializer,
   MESSAGE_RSOCKET_COMPOSITE_METADATA,
@@ -15,6 +16,7 @@ import {
 import RSocketWebSocketClient from 'rsocket-websocket-client';
 import {ReactiveSocket} from 'rsocket-types';
 import {OAuthService} from 'angular-oauth2-oidc-codeflow';
+import {EchoResponder} from '../../services/echoResponder';
 
 const metadataMimeType = MESSAGE_RSOCKET_COMPOSITE_METADATA.string;
 const bearerMimeType = 'message/x.rsocket.authentication.bearer.v0';
@@ -69,6 +71,7 @@ export class TableComponent implements OnInit, OnDestroy {
         debug: true
       }, BufferEncoders),
       errorHandler: (error => console.log(error)),
+      responder: new EchoResponder()
     });
     const socketChannel = 'table-connection.' + this.tableId;
     this.client.connect().subscribe({
@@ -83,7 +86,7 @@ export class TableComponent implements OnInit, OnDestroy {
                 Buffer.from(this.oauthService.getAccessToken())
               ),
               MESSAGE_RSOCKET_ROUTING,
-              Buffer.from(String.fromCharCode(socketChannel.length) + socketChannel)
+              Buffer.from(encodeRoute(socketChannel))
             )
           })
           .subscribe({
