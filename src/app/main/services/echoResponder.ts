@@ -1,5 +1,6 @@
 import {Responder, Payload} from 'rsocket-types';
 import {Flowable, Single} from 'rsocket-flowable';
+import {JsonSerializer} from 'rsocket-core';
 
 export class EchoResponder implements Responder<any, any> {
   metadataPush(payload: Payload<any, any>): Single<void> {
@@ -7,6 +8,8 @@ export class EchoResponder implements Responder<any, any> {
   }
 
   fireAndForget(payload: Payload<any, string>): void {
+
+    console.log(JsonSerializer.deserialize(payload.data));
     logRequest('fire-and-forget', payload);
   }
 

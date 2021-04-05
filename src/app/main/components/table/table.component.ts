@@ -7,7 +7,6 @@ import {
   encodeAndAddWellKnownMetadata,
   encodeRoute,
   IdentitySerializer,
-  JsonSerializer,
   MESSAGE_RSOCKET_COMPOSITE_METADATA,
   MESSAGE_RSOCKET_ROUTING,
   RSocketClient
@@ -36,11 +35,12 @@ export class TableComponent implements OnInit, OnDestroy {
   public cardsNumber: number;
   public cursor: number;
 
+  public socket: ReactiveSocket<any, any>;
+
   public client: RSocketClient<Encodable, any>;
 
   private colors = ['C', 'D', 'H', 'S'];
   private cardNumbers = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K'];
-
 
 
   ngOnInit(): void {
@@ -55,52 +55,73 @@ export class TableComponent implements OnInit, OnDestroy {
     }
     this.cursor = 0;
 
-    this.client = new RSocketClient({
+
+    const client = new RSocketClient({
       serializers: {
-        data: JsonSerializer,
+        data: IdentitySerializer,
         metadata: IdentitySerializer
       },
       setup: {
         keepAlive: 60000,
         lifetime: 180000,
         dataMimeType: 'application/json',
-        metadataMimeType,
+        metadataMimeType
       },
       transport: new RSocketWebSocketClient({
         url: 'ws://localhost:7000/rsocket',
         debug: true
       }, BufferEncoders),
-      errorHandler: (error => console.log(error)),
       responder: new EchoResponder()
     });
+
     const socketChannel = 'table-connection.' + this.tableId;
-    this.client.connect().subscribe({
-      onComplete: (socket: ReactiveSocket<any, any>) => {
-        socket
-          .metadataPush( {
-            data: null,
-            metadata: encodeAndAddWellKnownMetadata(
-              encodeAndAddCustomMetadata(
-                Buffer.alloc(0),
-                bearerMimeType,
-                Buffer.from(this.oauthService.getAccessToken())
-              ),
-              MESSAGE_RSOCKET_ROUTING,
-              Buffer.from(encodeRoute(socketChannel))
-            )
-          })
+
+    client.connect().subscribe({
+      onComplete: socket => {
+        this.socket = socket;
+        this.socket.metadataPush( {
+          data: null,
+          metadata: encodeAndAddWellKnownMetadata(
+            encodeAndAddCustomMetadata(
+              Buffer.alloc(0),
+              bearerMimeType,
+              Buffer.from(this.oauthService.getAccessToken())
+            ),
+            MESSAGE_RSOCKET_ROUTING,
+            Buffer.from(encodeRoute(socketChannel))
+          )
+        })
           .subscribe({
             onComplete: () => console.log('complete'),
             onError: error => {
               console.log('Connection has been closed due to:: ' + error);
             }
           });
-
+        console.log('complete connection');
       },
       onError: error => {
-        console.log('Connection has been refused due to:: ' + error);
+        console.log('got connection error');
+        console.error(error);
+      },
+      onSubscribe: cancel => {
+        console.log('subscribe connection');
+        console.log(cancel);
       }
     });
+
+  }
+
+  getSecuredMetaData(socketChannel: string): Buffer {
+    return encodeAndAddWellKnownMetadata(
+      encodeAndAddCustomMetadata(
+        Buffer.alloc(0),
+        bearerMimeType,
+        Buffer.from(this.oauthService.getAccessToken())
+      ),
+      MESSAGE_RSOCKET_ROUTING,
+      Buffer.from(encodeRoute(socketChannel))
+    );
+
   }
 
   ngOnDestroy(): void {
