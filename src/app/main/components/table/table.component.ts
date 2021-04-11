@@ -15,7 +15,7 @@ import {
 import RSocketWebSocketClient from 'rsocket-websocket-client';
 import {ReactiveSocket} from 'rsocket-types';
 import {OAuthService} from 'angular-oauth2-oidc-codeflow';
-import {EchoResponder} from '../../services/echoResponder';
+import {TableRSocketResponder} from '../../services/tableRSocketResponder';
 
 const metadataMimeType = MESSAGE_RSOCKET_COMPOSITE_METADATA.string;
 const bearerMimeType = 'message/x.rsocket.authentication.bearer.v0';
@@ -39,15 +39,12 @@ export class TableComponent implements OnInit, OnDestroy {
 
   public client: RSocketClient<Encodable, any>;
 
-  private colors = ['C', 'D', 'H', 'S'];
-  private cardNumbers = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K'];
-
-
   ngOnInit(): void {
 
     this.route.params.subscribe(params => {
       this.tableId = +params.id;
     });
+
     this.cardsNumber = 5;
     this.cards = [];
     for (let i = 0; i < this.cardsNumber; i++) {
@@ -71,7 +68,7 @@ export class TableComponent implements OnInit, OnDestroy {
         url: 'ws://localhost:7000/rsocket',
         debug: true
       }, BufferEncoders),
-      responder: new EchoResponder()
+      responder: new TableRSocketResponder(this)
     });
 
     const socketChannel = 'table-connection.' + this.tableId;
@@ -128,16 +125,6 @@ export class TableComponent implements OnInit, OnDestroy {
     if (this.client) {
       this.client.close();
     }
-  }
-
-  nextCard(): void {
-    if (this.cursor === 0) {
-      this.reset();
-    }
-    const randomColor = this.colors[Math.floor(Math.random() * (this.colors.length ))];
-    const randomCardNumber =  this.cardNumbers[Math.floor(Math.random() * (this.cardNumbers.length ))];
-    this.cards[this.cursor] =  randomCardNumber + randomColor;
-    this.cursor = (this.cursor + 1) % this.cardsNumber;
   }
 
   reset(): void {

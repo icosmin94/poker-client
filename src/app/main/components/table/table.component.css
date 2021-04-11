@@ -3,6 +3,12 @@
   min-height: 600px;
   min-width: 1300px;
 }
+.playing_container{
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+}
+
 .board-card {
   padding: 2px;
 }

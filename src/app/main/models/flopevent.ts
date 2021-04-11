@@ -1,4 +1,4 @@
-export class CardFlopEvent {
+export class FlopEvent {
   cardName: string;
   cardPosition: number;
 }
