@@ -53,7 +53,7 @@ export class TableComponent implements OnInit, OnDestroy {
     this.cursor = 0;
 
 
-    const client = new RSocketClient({
+    this.client = new RSocketClient({
       serializers: {
         data: IdentitySerializer,
         metadata: IdentitySerializer
@@ -73,20 +73,12 @@ export class TableComponent implements OnInit, OnDestroy {
 
     const socketChannel = 'table-connection.' + this.tableId;
 
-    client.connect().subscribe({
+    this.client.connect().subscribe({
       onComplete: socket => {
         this.socket = socket;
         this.socket.metadataPush( {
           data: null,
-          metadata: encodeAndAddWellKnownMetadata(
-            encodeAndAddCustomMetadata(
-              Buffer.alloc(0),
-              bearerMimeType,
-              Buffer.from(this.oauthService.getAccessToken())
-            ),
-            MESSAGE_RSOCKET_ROUTING,
-            Buffer.from(encodeRoute(socketChannel))
-          )
+          metadata: this.getSecuredMetaData(socketChannel)
         })
           .subscribe({
             onComplete: () => console.log('complete'),
