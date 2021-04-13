@@ -48,7 +48,7 @@ export class TableComponent implements OnInit, OnDestroy {
 
     this.cardsNumber = 5;
 
-    this.resetCards()
+    this.resetCards();
 
     this.client = new RSocketClient({
       serializers: {
@@ -62,7 +62,7 @@ export class TableComponent implements OnInit, OnDestroy {
         metadataMimeType
       },
       transport: new RSocketWebSocketClient({
-        url: 'ws://localhost:7000/rsocket',
+        url: 'ws://localhost:8300/rsocket',
         debug: true
       }, BufferEncoders),
       responder: new TableRSocketResponder(this, this.eventHandlerService)
