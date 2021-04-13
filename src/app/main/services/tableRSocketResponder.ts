@@ -2,14 +2,17 @@ import {Payload, Responder} from 'rsocket-types';
 import {Flowable, Single} from 'rsocket-flowable';
 import {JsonSerializer} from 'rsocket-core';
 import {TableComponent} from '../components/table/table.component';
-import {FlopEvent} from '../models/flopevent';
+import {RsocketEvent} from '../models/rsocket-event';
+import {EventHandlerService} from './event-handler.service';
 
 export class TableRSocketResponder implements Responder<any, any> {
 
-  public tableComponent: TableComponent;
+  private tableComponent: TableComponent;
+  private eventHandlerService: EventHandlerService;
 
-  constructor(tableComponent: TableComponent) {
+  constructor(tableComponent: TableComponent, eventHandlerService: EventHandlerService) {
     this.tableComponent = tableComponent;
+    this.eventHandlerService = eventHandlerService;
   }
 
   metadataPush(payload: Payload<any, any>): Single<void> {
@@ -17,12 +20,9 @@ export class TableRSocketResponder implements Responder<any, any> {
   }
 
   fireAndForget(payload: Payload<any, string>): void {
-    const flopEvent = new FlopEvent();
-
-    Object.assign(flopEvent, JsonSerializer.deserialize(payload.data));
-    this.treatFlopEvent(flopEvent);
-
-    logRequest('fire-and-forget', payload);
+    const event = new RsocketEvent();
+    Object.assign(event, JsonSerializer.deserialize(payload.data));
+    this.eventHandlerService.handleEvent(this.tableComponent, event)
   }
 
   requestResponse(
@@ -45,9 +45,7 @@ export class TableRSocketResponder implements Responder<any, any> {
     return Flowable.just(make('client channel response'));
   }
 
-  treatFlopEvent(flopEvent: FlopEvent): void {
-    this.tableComponent.cards[flopEvent.cardPosition] = flopEvent.cardName;
-  }
+
 
 }
 

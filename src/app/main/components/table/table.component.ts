@@ -16,6 +16,7 @@ import RSocketWebSocketClient from 'rsocket-websocket-client';
 import {ReactiveSocket} from 'rsocket-types';
 import {OAuthService} from 'angular-oauth2-oidc-codeflow';
 import {TableRSocketResponder} from '../../services/tableRSocketResponder';
+import {EventHandlerService} from '../../services/event-handler.service';
 
 const metadataMimeType = MESSAGE_RSOCKET_COMPOSITE_METADATA.string;
 const bearerMimeType = 'message/x.rsocket.authentication.bearer.v0';
@@ -28,12 +29,12 @@ const bearerMimeType = 'message/x.rsocket.authentication.bearer.v0';
 })
 export class TableComponent implements OnInit, OnDestroy {
   constructor(private route: ActivatedRoute,
-              private oauthService: OAuthService) { }
+              private oauthService: OAuthService,
+              private eventHandlerService: EventHandlerService) { }
 
   public tableId: number;
   public cards: string[] ;
-  public cardsNumber: number;
-  public cursor: number;
+  private cardsNumber: number;
 
   public socket: ReactiveSocket<any, any>;
 
@@ -46,12 +47,8 @@ export class TableComponent implements OnInit, OnDestroy {
     });
 
     this.cardsNumber = 5;
-    this.cards = [];
-    for (let i = 0; i < this.cardsNumber; i++) {
-      this.cards.push('green_back');
-    }
-    this.cursor = 0;
 
+    this.resetCards()
 
     this.client = new RSocketClient({
       serializers: {
@@ -68,7 +65,7 @@ export class TableComponent implements OnInit, OnDestroy {
         url: 'ws://localhost:7000/rsocket',
         debug: true
       }, BufferEncoders),
-      responder: new TableRSocketResponder(this)
+      responder: new TableRSocketResponder(this, this.eventHandlerService)
     });
 
     const socketChannel = 'table-connection.' + this.tableId;
@@ -100,7 +97,18 @@ export class TableComponent implements OnInit, OnDestroy {
 
   }
 
-  getSecuredMetaData(socketChannel: string): Buffer {
+  public resetCards(): void {
+    this.cards = [];
+    for (let i = 0; i < this.cardsNumber; i++) {
+      this.cards.push('green_back');
+    }
+  }
+
+  public setCard(cardName: string, position: number): void {
+    this.cards[position] = cardName;
+  }
+
+  private getSecuredMetaData(socketChannel: string): Buffer {
     return encodeAndAddWellKnownMetadata(
       encodeAndAddCustomMetadata(
         Buffer.alloc(0),
@@ -117,13 +125,6 @@ export class TableComponent implements OnInit, OnDestroy {
     if (this.client) {
       this.client.close();
     }
-  }
-
-  reset(): void {
-    for (let i = 0; i < this.cardsNumber; i++) {
-      this.cards[i] = 'green_back';
-    }
-    this.cursor = 0;
   }
 
 }

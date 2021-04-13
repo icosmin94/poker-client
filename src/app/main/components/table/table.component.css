@@ -9,6 +9,11 @@
   justify-content: space-evenly;
 }
 
+.table_title{
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+}
 .board-card {
   padding: 2px;
 }
